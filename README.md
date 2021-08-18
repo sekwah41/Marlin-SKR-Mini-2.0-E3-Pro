@@ -1,3 +1,43 @@
+# My changes
+**This is configured for the Ender 3 Pro.**
+Atm its just set up for the base Ender 3 Pro with an SKR-mini-E3 v2.0 board but the controller fan would not spin even when the motors were active.
+
+Will be configuring to have the bltouch active next with z-stop still enabled (don't see a point of unplugging/changing)
+
+The configuration is based on [Teaching Tech's Video](https://www.youtube.com/watch?v=mtCz_-2zvZo) and the wiring can be
+found [here](https://imgur.com/a/idnV4q6).
+
+
+# Troubleshooting
+## Controller fan not working
+If fan1 (should be controller fan) is not working then please make sure the idle speed is full under
+`Configuration > Controller fan > Idle speed` on the settings in the printer when its running.
+
+The led should light up next to the connector if it is trying to power.
+If the fan is not running please check with a voltmeter if it is supplying 24v.
+If it is and it is still not working your fan is likely dead (its quite easy not to notice given its location).
+
+The most common issue I've seen is the controller fan not working and its quite easy to assume the board or the firmware is set up wrong.
+(I lost a few hours to this).
+
+They are pretty cheap to replace so you can order another one on amazon for about £10. Just make sure its a 24v 4010 fan (40x40x10mm).
+
+# Power Loss Recovery
+I currently haven't toyed with it but all of the settings you will need to change should be in `Marlin/Confguration_adv.h`
+Take a look at `#define SDCARD_READONLY` and `#define POWER_LOSS_RECOVERY`
+
+# Building & Installing
+
+Just a note when the files are built they should be available in `.pio\build\STM32F103RC_btt_USB`.
+
+Just copy the created `firmware.bin` onto an sd card and restart the board with it in.
+
+If you have the TFT32 screen I would recommend having it in the LCD simulator mode.
+If the firmware is detected you should see it be blank for around 5-10 seconds.
+
+If it is installed you should now see that the `firmware.bin` has been renamed to `FIRMWARE.CUR`
+
+# Now back to normal readme
 # Marlin 3D Printer Firmware
 
 ![GitHub](https://img.shields.io/github/license/marlinfirmware/marlin.svg)

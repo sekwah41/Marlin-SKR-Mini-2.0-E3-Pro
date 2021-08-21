@@ -2,11 +2,41 @@
 **This is configured for the Ender 3 Pro.**
 Atm its just set up for the base Ender 3 Pro with an SKR-mini-E3 v2.0 board but the controller fan would not spin even when the motors were active.
 
-Will be configuring to have the bltouch active next with z-stop still enabled (don't see a point of unplugging/changing)
+The bltouch is configured to use the dedicated bltouch pins rather than replacing the z-stop. (in case you want to go back without physically changing).
 
-The configuration is based on [Teaching Tech's Video](https://www.youtube.com/watch?v=mtCz_-2zvZo) and the wiring can be
+
+The configuration is partially based on [Teaching Tech's Video](https://www.youtube.com/watch?v=mtCz_-2zvZo) and the wiring can be
 found [here](https://imgur.com/a/idnV4q6).
 
+# Starting G-Codes
+
+```marlin
+; Ender 3 Pro Custom Start G-code
+G92 E0 ; Reset Extruder
+
+M190 S{material_bed_temperature} ; Get it up to temp to make sure its in the shape needed while leveling
+
+G28  ; Home all axes
+
+; Docs for the codes https://marlinfw.org/docs/gcode/G029-ubl.html
+G29 P1 ; Runs UBL probing routine.
+G29 P3 ; Calculate unprobed area based on known data.
+G29 F10 ; 10mm Fade height based on calculated data. How quickly it should return to being perfectly level.
+G29 S1 ; Saves bed levlling to slot 1
+G29 A ; Activate UBL
+G29 L1 ; Load mesh from slot 1
+
+M500 
+
+G1 Z2.0 F3000 ; Move Z Axis up little to prevent scratching of Heat Bed
+G1 X0.1 Y20 Z0.3 F5000.0 ; Move to start position
+G1 X0.1 Y200.0 Z0.3 F1500.0 E15 ; Draw the first line
+G1 X0.4 Y200.0 Z0.3 F5000.0 ; Move to side a little
+G1 X0.4 Y20 Z0.3 F1500.0 E30 ; Draw the second line
+G92 E0 ; Reset Extruder
+G1 Z2.0 F3000 ; Move Z Axis up little to prevent scratching of Heat Bed
+G1 X5 Y20 Z0.3 F5000.0 ; Move over to prevent blob squish
+```
 
 # Troubleshooting
 ## Controller fan not working
@@ -36,6 +66,9 @@ If you have the TFT32 screen I would recommend having it in the LCD simulator mo
 If the firmware is detected you should see it be blank for around 5-10 seconds.
 
 If it is installed you should now see that the `firmware.bin` has been renamed to `FIRMWARE.CUR`
+
+# Start Codes
+
 
 # Now back to normal readme
 # Marlin 3D Printer Firmware
